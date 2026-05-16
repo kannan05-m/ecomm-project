@@ -3,5 +3,5 @@ WORKDIR /app
 COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew build -x test
-EXPOSE 8080
-CMD ["java", "-jar", "build/libs/*.jar"]
+RUN ls build/libs/
+CMD java -jar $(ls build/libs/*.jar | grep -v plain)
