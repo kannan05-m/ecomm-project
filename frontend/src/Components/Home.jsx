@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import API from "../axios.jsx";
 import AppContext from "../Context/Context";
 
 const CARD_ACCENTS = ["#ff2eb4", "#c6ff00", "#2b54ff", "#111", "#ff2eb4", "#c6ff00"];
@@ -23,8 +23,8 @@ const Home = ({ selectedCategory }) => {
         const updatedProducts = await Promise.all(
           data.map(async (product) => {
             try {
-              const response = await axios.get(
-                `http://localhost:8080/api/product/${product.id}/image`,
+              const response = await API.get(
+                `/product/${product.id}/image`,
                 { responseType: "blob" }
               );
               const imageUrl = URL.createObjectURL(response.data);
@@ -85,7 +85,6 @@ const Home = ({ selectedCategory }) => {
           padding: 48px 40px 80px;
         }
 
-        /* ── SECTION HEADER ── */
         .hm-header {
           display: flex;
           align-items: flex-end;
@@ -110,14 +109,12 @@ const Home = ({ selectedCategory }) => {
           color: #999;
         }
 
-        /* ── GRID ── */
         .hm-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           gap: 32px;
         }
 
-        /* ── CARD ── */
         .hm-card {
           position: relative;
           border: 3px solid #111;
@@ -131,23 +128,11 @@ const Home = ({ selectedCategory }) => {
           transform: translate(-4px, -4px);
           box-shadow: 8px 8px 0px #111;
         }
-        .hm-card.unavailable {
-          background: #e8e8e8;
-        }
+        .hm-card.unavailable { background: #e8e8e8; }
 
-        /* ACCENT TOP BORDER */
-        .hm-card-accent {
-          height: 6px;
-          width: 100%;
-          flex-shrink: 0;
-        }
+        .hm-card-accent { height: 6px; width: 100%; flex-shrink: 0; }
 
-        /* IMAGE WRAP */
-        .hm-img-wrap {
-          position: relative;
-          overflow: hidden;
-          flex-shrink: 0;
-        }
+        .hm-img-wrap { position: relative; overflow: hidden; flex-shrink: 0; }
         .hm-img {
           width: 100%;
           height: 260px;
@@ -157,7 +142,6 @@ const Home = ({ selectedCategory }) => {
         }
         .hm-card:hover .hm-img { transform: scale(1.04); }
 
-        /* PRICE BADGE — top right corner */
         .hm-price-badge {
           position: absolute;
           top: 12px;
@@ -172,7 +156,6 @@ const Home = ({ selectedCategory }) => {
           line-height: 1.1;
         }
 
-        /* STAFF PICK BADGE */
         .hm-staff-badge {
           position: absolute;
           top: 12px;
@@ -187,7 +170,6 @@ const Home = ({ selectedCategory }) => {
           color: #111;
         }
 
-        /* CARD BODY */
         .hm-card-body {
           padding: 16px 16px 14px;
           display: flex;
@@ -222,7 +204,6 @@ const Home = ({ selectedCategory }) => {
           color: #aaa;
         }
 
-        /* ADD BUTTON */
         .hm-add-btn {
           width: 44px;
           height: 44px;
@@ -241,14 +222,8 @@ const Home = ({ selectedCategory }) => {
           font-family: 'Barlow Condensed', sans-serif;
         }
         .hm-add-btn:hover { background: #ff2eb4; border-color: #ff2eb4; color: #fff; }
-        .hm-add-btn.out {
-          background: #999;
-          border-color: #999;
-          color: #ccc;
-          cursor: not-allowed;
-        }
+        .hm-add-btn.out { background: #999; border-color: #999; color: #ccc; cursor: not-allowed; }
 
-        /* EMPTY STATE */
         .hm-empty {
           grid-column: 1 / -1;
           display: flex;
@@ -265,11 +240,7 @@ const Home = ({ selectedCategory }) => {
           color: #111;
           margin-bottom: 12px;
         }
-        .hm-empty-sub {
-          font-size: 15px;
-          font-weight: 400;
-          color: #888;
-        }
+        .hm-empty-sub { font-size: 15px; font-weight: 400; color: #888; }
 
         @media (max-width: 768px) {
           .hm-page { padding: 24px 16px 60px; }
@@ -279,19 +250,14 @@ const Home = ({ selectedCategory }) => {
       `}</style>
 
       <div className="hm-page">
-
-        {/* HEADER */}
         <div className="hm-header">
-          <h2 className="hm-title">
-            ALL <span>DROPS</span>
-          </h2>
+          <h2 className="hm-title">ALL <span>DROPS</span></h2>
           <span className="hm-count">
             {filteredProducts.length} item{filteredProducts.length !== 1 ? "s" : ""}
             {selectedCategory ? ` · ${selectedCategory}` : ""}
           </span>
         </div>
 
-        {/* GRID */}
         <div className="hm-grid">
           {filteredProducts.length === 0 ? (
             <div className="hm-empty">
@@ -302,47 +268,24 @@ const Home = ({ selectedCategory }) => {
             filteredProducts.map((product, index) => {
               const { id, brand, name, price, productAvailable, imageUrl, category } = product;
               const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
-
               return (
-                <div
-                  className={`hm-card ${!productAvailable ? "unavailable" : ""}`}
-                  key={id}
-                >
-                  {/* ACCENT STRIPE */}
+                <div className={`hm-card ${!productAvailable ? "unavailable" : ""}`} key={id}>
                   <div className="hm-card-accent" style={{ background: accent }} />
-
-                  {/* IMAGE */}
                   <div className="hm-img-wrap">
                     <Link to={`/product/${id}`}>
                       <img src={imageUrl} alt={name} className="hm-img" />
                     </Link>
-
-                    {/* PRICE BADGE */}
                     <div className="hm-price-badge">${price}</div>
-
-                    {/* STAFF PICK — show on every 3rd card */}
-                    {index % 3 === 2 && (
-                      <div className="hm-staff-badge">Staff Pick</div>
-                    )}
+                    {index % 3 === 2 && <div className="hm-staff-badge">Staff Pick</div>}
                   </div>
-
-                  {/* CARD BODY */}
                   <div className="hm-card-body">
                     <div className="hm-card-info">
-                      <Link to={`/product/${id}`} className="hm-card-name">
-                        {name.toUpperCase()}
-                      </Link>
-                      <div className="hm-card-meta">
-                        {category} / {String(index + 1).padStart(2, "0")}
-                      </div>
+                      <Link to={`/product/${id}`} className="hm-card-name">{name.toUpperCase()}</Link>
+                      <div className="hm-card-meta">{category} / {String(index + 1).padStart(2, "0")}</div>
                     </div>
-
                     <button
                       className={`hm-add-btn ${!productAvailable ? "out" : ""}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (productAvailable) addToCart(product);
-                      }}
+                      onClick={(e) => { e.preventDefault(); if (productAvailable) addToCart(product); }}
                       disabled={!productAvailable}
                       title={productAvailable ? "Add to cart" : "Out of stock"}
                     >

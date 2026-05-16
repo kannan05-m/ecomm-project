@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../axios.jsx";
 
 const Navbar = ({ onSelectCategory, onSearch }) => {
   const getInitialTheme = () => {
@@ -20,7 +20,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/products");
+      const response = await API.get("/products");
       setSearchResults(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -32,9 +32,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     if (value.length >= 1) {
       setShowSearchResults(true);
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/products/search?name=${value}`
-        );
+        const response = await API.get(`/products/search?name=${value}`);
         setSearchResults(response.data);
         setNoResults(response.data.length === 0);
       } catch (error) {
@@ -63,7 +61,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   }, [theme]);
 
   const categories = ["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"];
-
   const isDark = theme === "dark-theme";
 
   return (
@@ -90,7 +87,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
           gap: 16px;
         }
 
-        /* BRAND */
         .nb-brand {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 22px;
@@ -100,7 +96,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
           flex-shrink: 0;
         }
 
-        /* LINKS */
         .nb-links {
           display: flex;
           align-items: center;
@@ -139,7 +134,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
         .nb-links a:hover,
         .nb-links button.nb-link:hover { color: #ff2eb4 !important; }
 
-        /* DROPDOWN */
         .nb-dropdown { position: relative; }
         .nb-dropdown-menu {
           display: none;
@@ -174,15 +168,8 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
           color: #ff2eb4;
         }
 
-        /* RIGHT SIDE */
-        .nb-right {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex-shrink: 0;
-        }
+        .nb-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
-        /* DARK MODE TOGGLE */
         .nb-theme-btn {
           display: flex;
           align-items: center;
@@ -200,14 +187,9 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
           transition: background 0.2s, color 0.2s;
           white-space: nowrap;
         }
-        .nb-theme-btn:hover {
-          background: #ff2eb4;
-          color: #fff;
-          border-color: #ff2eb4;
-        }
+        .nb-theme-btn:hover { background: #ff2eb4; color: #fff; border-color: #ff2eb4; }
         .nb-theme-emoji { font-size: 16px; line-height: 1; }
 
-        /* CART BUTTON */
         .nb-cart {
           display: flex;
           align-items: center;
@@ -228,7 +210,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
         .nb-cart:hover { background: #ff2eb4; color: #fff !important; }
         .nb-cart-emoji { font-size: 16px; }
 
-        /* SEARCH WRAPPER */
         .nb-search-wrap { position: relative; }
         .nb-search {
           background: transparent !important;
@@ -246,7 +227,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
         .nb-search:focus { border-color: #ff2eb4 !important; }
         .nb-search::placeholder { color: #999 !important; font-weight: 400 !important; }
 
-        /* SEARCH RESULTS */
         .nb-results {
           position: absolute;
           top: calc(100% + 4px);
@@ -292,11 +272,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
       <header className="nb-root">
         <div className="nb-inner">
-
-          {/* BRAND */}
           <a className="nb-brand" href="/ecomm">VAULT-X</a>
-
-          {/* NAV LINKS */}
           <ul className="nb-links">
             <li><a href="/" className="active">Home</a></li>
             <li><a href="/add_product">Add Product</a></li>
@@ -304,30 +280,20 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               <button className="nb-link">Categories ▾</button>
               <div className="nb-dropdown-menu">
                 {categories.map((cat) => (
-                  <button key={cat} onClick={() => handleCategorySelect(cat)}>
-                    {cat}
-                  </button>
+                  <button key={cat} onClick={() => handleCategorySelect(cat)}>{cat}</button>
                 ))}
               </div>
             </li>
           </ul>
-
-          {/* RIGHT */}
           <div className="nb-right">
-
-            {/* DARK MODE TOGGLE */}
             <button className="nb-theme-btn" onClick={toggleTheme}>
               <span className="nb-theme-emoji">{isDark ? "☀️" : "🌙"}</span>
               <span className="nb-theme-label">{isDark ? "Light" : "Dark"}</span>
             </button>
-
-            {/* CART */}
             <a href="/cart" className="nb-cart">
               <span className="nb-cart-emoji">🛒</span>
               Cart
             </a>
-
-            {/* SEARCH */}
             <div className="nb-search-wrap">
               <input
                 className="nb-search"
@@ -347,14 +313,11 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                       </li>
                     ))
                   ) : (
-                    noResults && (
-                      <div className="nb-no-results">No product found</div>
-                    )
+                    noResults && <div className="nb-no-results">No product found</div>
                   )}
                 </ul>
               )}
             </div>
-
           </div>
         </div>
       </header>

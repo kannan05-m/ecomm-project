@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../axios.jsx";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -31,30 +31,19 @@ const AddProduct = () => {
     setImage(null);
   };
 
-//   const submitHandler = (event) => {
-//     event.preventDefault();
-//     const formData = new FormData();
-//     formData.append("imageFile", image);
-//     formData.append("product", new Blob([JSON.stringify(product)], { type: "application/json" }));
-//     axios.post("http://localhost:8080/api/product", formData, {
-//       headers: { "Content-Type": "multipart/form-data" },
-//     })
-//       .then(() => alert("Product added successfully"))
-//       .catch(() => alert("Error adding product"));
-//   };
-const submitHandler = (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("imageFile", image);
     formData.append("product", new Blob([JSON.stringify(product)], { type: "application/json" }));
-    
-    axios.post("http://localhost:8080/api/product", formData, {
+
+    API.post("/product", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(() => alert("Product added successfully"))
-      .catch((error) => {                              // ← replace your old .catch()
-        console.log(error.response?.data);             // ← shows the error message
-        console.log(error.response?.status);           // ← shows the status code (400, 500 etc)
+      .catch((error) => {
+        console.log(error.response?.data);
+        console.log(error.response?.status);
         alert("Error adding product: " + error.response?.data);
       });
   };
